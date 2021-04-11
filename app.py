@@ -8,5 +8,6 @@ CORS(app)
 def index():
     return "/Chastain/index.html"
 
-    if __name__ =="__main__":
-        app.run(theaded=True, port=5000, debug=True)
+if __name__ == "__main__":
+    app.run(threaded=True, port=5000, debug=True)
+    
