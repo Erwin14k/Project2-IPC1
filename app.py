@@ -58,14 +58,6 @@ def index():
 
 
 
-@app.route('/saludar',methods=['POST'])
-def saluda():
-    response = {}
-    name = request.json['name']
-    response = {
-        "state": "Hola "+name
-    }
-    return response
 
 @app.route('/login',methods=['POST'])
 def login():
@@ -115,50 +107,29 @@ def r_egister():
         return response
 
 
-
-
-@app.route("/usuario",methods=['GET','POST','PUT','DELETE'])
-def user_options():
-
+@app.route('/adminView',methods=['GET','POST','DELETE'])
+def get_user_by_id():
     response = {}
-    
-    if request.method == 'POST':
-
-        nombre = request.form.get('nombre')
-        user_name = request.form.get('user_name')
-        user_pass = request.form.get('user_pass')
-        rol = request.form.get('rol')
-
-        if userHandler.new(nombre,user_name,user_pass,rol):
-
-            response['stauts'] = "perfect"
-            response['info'] = 'Usuario creado correctamente'
-
-        else:
-
-            response['status'] = "error"
-            response['info'] = 'Ocurrió un error al crear el usuario'
-
-    elif request.method == 'GET':
-
-        id = int(request.args.get("id",None))
-        return userHandler.devolver_usuario(id)
-
-    elif request.method == 'DELETE':
-
-        id = int(request.args.get("id",None))
-        if userHandler.delete_user(id):
-
-            response['status'] = "perfect"
-            response['info'] = 'Usuario eliminado correctamente'
-
-        else:
-
-            response['status'] = "error"
-            response['info'] = 'Ocurrió un error al elimiar al usuario'
+    id = request.args.get("name", None)
+    user_response = userHandler.get_user_by_id(id)
+    if (user_response != False):
+        response = {
+            "name": str(user_response.name),
+            "last_name": str(user_response.last_name),
+            "user_name": str(user_response.user_name),
+            "password": str(user_response.password),
+            "date_of_birth": str(user_response.date_of_birth)
+        }
+        return  response
+    response = {
+        "state": "error",
+    }
+    return  response
 
 
-    return response
+
+
+
 
 
 if __name__ == "__main__":
