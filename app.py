@@ -59,7 +59,7 @@ def saluda():
     return response
 
 @app.route('/login',methods=['POST'])
-def login_module():
+def login():
     
     response = {}
     user_name = request.json['user_name']
