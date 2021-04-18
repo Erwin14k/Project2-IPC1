@@ -1,0 +1,9 @@
+{
+    "name" : "request.json['phone2']",
+    "last_name" : "request.json['phone']",
+    "user_name" : "request.json['phon2e']",
+    "password" : "request.json['phone']",
+    "gender"  : "request.json['phone']",
+    "date_of_birth"  : "request.json['phone']",
+    "phone" : "request.json['phone']"
+    }
