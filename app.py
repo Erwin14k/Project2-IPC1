@@ -38,8 +38,17 @@ medicineHandler.new_medicine("Ibuprofeno", 50.00, "medicina 2", 100)
 medicineHandler.new_medicine("Ibersatán", 50.00, "medicina 3", 100)
 medicineHandler.new_medicine("Paracetamol", 50.00, "medicina 4", 100)
 medicineHandler.new_medicine("Omeprazol ", 50.00, "medicina 5", 100)
-
-
+print("==============================================================")
+userHandler.login_validation("Master","1234")
+userHandler.get_user_role_by_username("Master")
+print("==============================================================")
+print(userHandler.users[2].user_name)
+userHandler.update_patient(2,"Jorge", "López","pacienteloco", "1234", "16/04/2001")
+print(userHandler.users[2].user_name)
+print("==============================================================")
+userHandler.delete_user(1)
+userHandler.delete_user(1)
+print("==============================================================")
 @app.route("/")
 def index():
     return "<h1>Ruta Principal 14k</h1>"
@@ -108,6 +117,52 @@ def r_egister():
 
 
 
+@app.route("/usuario",methods=['GET','POST','PUT','DELETE'])
+def user_options():
+
+    response = {}
+    
+    if request.method == 'POST':
+
+        nombre = request.form.get('nombre')
+        user_name = request.form.get('user_name')
+        user_pass = request.form.get('user_pass')
+        rol = request.form.get('rol')
+
+        if userHandler.new(nombre,user_name,user_pass,rol):
+
+            response['stauts'] = "perfect"
+            response['info'] = 'Usuario creado correctamente'
+
+        else:
+
+            response['status'] = "error"
+            response['info'] = 'Ocurrió un error al crear el usuario'
+
+    elif request.method == 'GET':
+
+        id = int(request.args.get("id",None))
+        return userHandler.devolver_usuario(id)
+
+    elif request.method == 'DELETE':
+
+        id = int(request.args.get("id",None))
+        if userHandler.delete_user(id):
+
+            response['status'] = "perfect"
+            response['info'] = 'Usuario eliminado correctamente'
+
+        else:
+
+            response['status'] = "error"
+            response['info'] = 'Ocurrió un error al elimiar al usuario'
+
+
+    return response
+
 
 if __name__ == "__main__":
     app.run(threaded=True, port=5000,debug=True)
+
+
+    
