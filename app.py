@@ -69,7 +69,8 @@ def login():
     if(userHandler.login_validation(user_name,password)):
         response = {
             "state": "perfect",
-            "message": "El usuario "+str(user_name)+ "ha iniciado sesión con éxito"
+            "message": "El usuario "+str(user_name)+ "ha iniciado sesión con éxito",
+            "role": userHandler.get_user_role_by_username(user_name)
         }
         return response
     else:

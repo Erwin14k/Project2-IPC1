@@ -22,6 +22,13 @@ class User_DAO:
                 return user.user_role
         return False
 
+#Función que nos devuelve el usuario en base su id
+    def get_user_by_id(self,id):    
+        for user in self.users:
+            if user.id == id:
+                return user
+        return False
+
 #Función que valida los datos de inicio de sesión
     def login_validation(self,user_name,password):
         for user in self.users:
