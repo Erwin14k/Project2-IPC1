@@ -1,9 +1,9 @@
 from Medicine import Medicine
-
+import json
 class Medicine_DAO:
     def __init__(self):
         self.medicines = []
-        self.idm_counter = 0
+        self.idm_counter = 1000
 
 
 
@@ -17,3 +17,7 @@ class Medicine_DAO:
         self.idm_counter += 1
         print("Se ingresó una nueva medicina")
         return True
+
+#Función que devuelve todos los medicamentos
+    def get_medicines(self):
+        return json.dumps([Medicine.dump() for Medicine in self.medicines if Medicine.amount!=0]) 

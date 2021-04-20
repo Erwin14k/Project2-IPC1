@@ -1,5 +1,5 @@
 from User import User
-
+import json 
 
 class User_DAO:
     def __init__(self):
@@ -58,7 +58,7 @@ class User_DAO:
             if user.user_name == user_name:
                 print('El nombre de usuario ya existe, intente de nuevo')
                 return False
-        new = User(self.id_counter,name,last_name,user_name,password,gender,date_of_birth,phone,"Paciente","patient")
+        new = User(self.id_counter,name,last_name,user_name,password,gender,date_of_birth,phone,"Administrador","admin")
         self.users.append(new)
         self.id_counter += 1
         print("Se creo un nuevo admin")
@@ -75,6 +75,13 @@ class User_DAO:
         self.id_counter += 1
         print("Se creo un nuevo paciente")
         return True
+#Función que devuelve todos los usuarios excepto el admin
+    def id_of_all_users_except_admin(self):
+        return json.dumps([User.dump() for User in self.users if User.id != 0  ]) 
+#Función que devuelve todos los usuarios en base a su rol 
+    def get_users_by_role(self,role):
+        return json.dumps([User.dump() for User in self.users if User.user_role == role  ]) 
+
 
 #Función para actualizar datos de pacientes
     def update_patient(self,id , name ,last_name ,user_name ,password ,date_of_birth):
@@ -93,12 +100,12 @@ class User_DAO:
     
 
 #Función para crear nuevos doctores
-    def new_doctor(self,name,last_name,user_name,password,gender,date_of_birth,phone,specialty):
+    def new_doctor(self,name,last_name,user_name,password,gender,date_of_birth,phone,speciality):
         for user in self.users:
             if user.user_name == user_name:
                 print('El nombre de usuario ya existe, intente de nuevo')
                 return False
-        new = User(self.id_counter,name,last_name,user_name,password,gender,date_of_birth,phone,specialty,"doctor")
+        new = User(self.id_counter,name,last_name,user_name,password,gender,date_of_birth,phone,speciality,"doctor")
         self.users.append(new)
         self.id_counter += 1
         print("Se creo un nuevo doctor")

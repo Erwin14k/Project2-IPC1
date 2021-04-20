@@ -39,15 +39,16 @@ medicineHandler.new_medicine("Ibersatán", 50.00, "medicina 3", 100)
 medicineHandler.new_medicine("Paracetamol", 50.00, "medicina 4", 100)
 medicineHandler.new_medicine("Omeprazol ", 50.00, "medicina 5", 100)
 print("==============================================================")
-userHandler.login_validation("Master","1234")
-userHandler.get_user_role_by_username("Master")
+#userHandler.login_validation("Master","1234")
+#print(userHandler.get_user_role_by_username("Master"))
 print("==============================================================")
 print(userHandler.users[2].user_name)
 userHandler.update_patient(2,"Jorge", "López","pacienteloco", "1234", "16/04/2001")
 print(userHandler.users[2].user_name)
+print(userHandler.users[2].user_role)
 print("==============================================================")
-userHandler.delete_user(1)
-userHandler.delete_user(1)
+#userHandler.delete_user(1)
+#userHandler.delete_user(1)
 print("==============================================================")
 @app.route("/")
 def index():
@@ -69,14 +70,15 @@ def login():
     if(userHandler.login_validation(user_name,password)):
         response = {
             "state": "perfect",
-            "message": "El usuario "+str(user_name)+ "ha iniciado sesión con éxito",
-            "role": userHandler.get_user_role_by_username(user_name)
+            "message": "El usuario "+str(user_name)+ " ha iniciado sesión con éxito",
+            "role":str(userHandler.get_user_role_by_username(user_name))
         }
         return response
     else:
         response = {
             "state": "error",
-            "message": "El nombre de usuario o contraeña incorrectos"
+            "message": "El nombre de usuario o contraeña incorrectos",
+            "role" : "error"
         }
         return response
 
@@ -128,8 +130,25 @@ def get_user_by_id():
     return  response
 
 
+@app.route('/get-patients',methods=['GET'])
+def get_patients():
+    return  userHandler.get_users_by_role("patient")
 
+@app.route('/get-doctors',methods=['GET'])
+def get_doctors():
+    return  userHandler.get_users_by_role("doctor")
 
+@app.route('/get-nurses',methods=['GET'])
+def get_nurses():
+    return  userHandler.get_users_by_role("nurse")
+
+@app.route('/get-medicines',methods=['GET'])
+def get_medicines():
+    return  medicineHandler.get_medicines()
+
+@app.route('/get-id_users',methods=['GET'])
+def get_id_users():
+    return  userHandler.id_of_all_users_except_admin()
 
 
 
