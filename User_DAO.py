@@ -7,6 +7,7 @@ class User_DAO:
         self.id_counter = 0
         user_name_temp=""
         id_temp=""
+        role_temp=""
 
 #Función que nos indica el usuario en base a su id
     def user_by_id(self,id):
