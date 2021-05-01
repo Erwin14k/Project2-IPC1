@@ -20,4 +20,32 @@ class Medicine_DAO:
 
 #Función que devuelve todos los medicamentos
     def get_medicines(self):
-        return json.dumps([Medicine.dump() for Medicine in self.medicines if Medicine.amount!=0]) 
+        return json.dumps([Medicine.dump() for Medicine in self.medicines ]) 
+#Función parecida a la anterior, en este caso nos servirá para traer los id de los medicamentos
+    def id_of_all_medicines(self):
+        return json.dumps([Medicine.dump() for Medicine in self.medicines ])
+
+#Función que devuelve todos los datos de un medicamento en base a su id 
+    def get_medicine_data_by_id(self,id):
+        return json.dumps([Medicine.dump() for Medicine in self.medicines if Medicine.id == int(id)  ]) 
+
+
+#Función para actualizar datos de cualquier medicamento
+    def update_medicine(self,id ,price ,description):
+        for medicine in self.medicines:
+            if medicine.id ==int(id) :
+                medicine.price=price
+                medicine.description=description
+                return True
+        return False
+
+
+#Función para eliminar usuarios(enfermeras, doctores o pacientes)
+    def delete_medicine(self,id):
+        for medicine in self.medicines:
+            if medicine.id == int(id):
+                print(f'El medicamento: "{medicine.name}" ha sido eliminado con éxito')
+                self.medicines.remove(medicine)
+                return True
+        print(f'El medicamento con id: "{ id }" no ha sido encontrado.')
+        return False

@@ -6,7 +6,7 @@ class User_DAO:
     def __init__(self):
         self.users = []
         self.id_counter = 0
-        self.coincidences=0
+        self.coincidences = 0
         self.user_name_temp=""
         self.id_temp=99999
         self.role_temp=""
@@ -31,13 +31,24 @@ class User_DAO:
             if user.id == int(id):
                 return user
         return False
-    
-    
-    
+
+    def coincidence_of_user_name(self,username):
+        for user in self.users:
+            if user.user_name==username:
+                self.coincidences += 1
+                if self.coincidences==0:
+                    return True
+
 #Función que nos devuelve el nombre y apellido del usuario en base a su id
     def get_name_of_user_by_id(self,id):    
         for user in self.users:
             if user.id == int(id):
+                return user.name+" "+user.last_name
+        return False
+
+    def get_name_of_user_by_user_name(self,user_name):    
+        for user in self.users:
+            if user.user_name == user_name:
                 return user.name+" "+user.last_name
         return False
 
@@ -103,23 +114,30 @@ class User_DAO:
         return False
 
 
-
-
-
-
-
-
-
-
-    def coincidences_of_user_name(self,user_name):
+    """def update_user2(self,id , name ,last_name ,username ,password ,date_of_birth):
+        self.coincidences=0
         for user in self.users:
-            if user.user_name==user_name:
-                self.coincidences +=1
-                if self.coincidences ==0:
+            if user.id==int(id) and user.user_name==username:
+                print("hola-------------------------------")
+                user.name = name
+                user.last_name = last_name
+                user.password = password
+                user.date_of_birth = date_of_birth
+                print("Se han actualizado con éxito los datos para el paciente con el id: "+str(id))
+                return True
+            elif user.id==int(id) and user.user_name != username:
+                if (User_DAO.coincidence_of_user_name(username)):
+                    print("hola-------------------------------")
+                    user.name = name
+                    user.last_name = last_name
+                    user.user_name = username
+                    user.password = password
+                    user.date_of_birth = date_of_birth
+                    print("Se han actualizado con éxito los datos para el paciente con el id: "+str(id))
                     self.coincidences=0
                     return True
-                self.coincidences=0
-                return False
+            self.coincidences=0
+            return False"""
 
 
 #Función para crear nuevos admin(Esta función solo se utilizará una vez ya que solo hay un admin)
@@ -163,7 +181,7 @@ class User_DAO:
     
 
 #Función para crear nuevos doctores
-    def new_doctor(self,name,last_name,user_name,password,gender,date_of_birth,phone,speciality):
+    def new_doctor(self,name,last_name,user_name,password,gender,date_of_birth,speciality,phone):
         for user in self.users:
             if user.user_name == user_name:
                 print('El nombre de usuario ya existe, intente de nuevo')

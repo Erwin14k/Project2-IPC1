@@ -21,11 +21,11 @@ userHandler.new_patient("paciente","3","user3","1234","f","15/04/2021","12345678
 userHandler.new_patient("paciente","4","user4","1234","f","15/04/2021","12345678")
 userHandler.new_patient("paciente","5","user5","1234","m","15/04/2021","12345678")
 
-userHandler.new_doctor("doctor","1","user100","1234","m","15/04/2021","12345678","Cardiologo")
-userHandler.new_doctor("doctor","2","user101","1234","m","15/04/2021","12345678","Pediatra")
-userHandler.new_doctor("doctor","3","user102","1234","f","15/04/2021","12345678","Oncólogo")
-userHandler.new_doctor("doctor","4","user103","1234","f","15/04/2021","12345678","Urólogo")
-userHandler.new_doctor("doctor","5","user104","1234","m","15/04/2021","12345678","Cirugía General")
+userHandler.new_doctor("doctor","1","user100","1234","m","15/04/2021","Cardiologo","12345678")
+userHandler.new_doctor("doctor","2","user101","1234","m","15/04/2021","Pediatra","12345678")
+userHandler.new_doctor("doctor","3","user102","1234","f","15/04/2021","Oncólogo","12345678")
+userHandler.new_doctor("doctor","4","user103","1234","f","15/04/2021","Urólogo","12345678")
+userHandler.new_doctor("doctor","5","user104","1234","m","15/04/2021","Cirugía General","12345678")
 
 
 userHandler.new_nurse("enfermera", "1", "nurse1", "1234", "f", "15/04/2021", "12345678")
@@ -41,11 +41,11 @@ medicineHandler.new_medicine("Ibersatán", 50.00, "medicina 3", 100)
 medicineHandler.new_medicine("Paracetamol", 50.00, "medicina 4", 100)
 medicineHandler.new_medicine("Omeprazol ", 50.00, "medicina 5", 100)
 
-appointmentHandler.new_appointment(1,"22/04/2021","9:00 am","Dolor de estómago")
-appointmentHandler.new_appointment(2,"22/04/2021","9:00 am","Dolor de cabeza")
-appointmentHandler.new_appointment(3,"22/04/2021","9:00 am","Dolor de pierna")
-appointmentHandler.new_appointment(4,"22/04/2021","9:00 am","Dolor de muela")
-appointmentHandler.new_appointment(5,"22/04/2021","9:00 am","Dolor de cuello")
+appointmentHandler.new_appointment(1,"22/04/2021","9:00","Dolor de estómago")
+appointmentHandler.new_appointment(2,"22/04/2021","9:00","Dolor de cabeza")
+appointmentHandler.new_appointment(3,"22/04/2021","9:00","Dolor de pierna")
+appointmentHandler.new_appointment(4,"22/04/2021","9:00","Dolor de muela")
+appointmentHandler.new_appointment(5,"22/04/2021","9:00","Dolor de cuello")
 
 #print(appointmentHandler.appointments[0].id_doctor+" "+appointmentHandler.appointments[0].name_doctor)
 #print(appointmentHandler.appointments[1].name_patient)
@@ -55,6 +55,9 @@ appointmentHandler.new_appointment(5,"22/04/2021","9:00 am","Dolor de cuello")
 
 print(userHandler.update_user(11,"Lidia","Vásquez","lidia123","12345","21/07/2000" ))
 print(userHandler.users[11].user_name)
+
+
+
 @app.route("/")
 def index():
     return "<h1>Ruta Principal 14k</h1>"
@@ -77,7 +80,8 @@ def login():
             "state": "perfect",
             "message": "El usuario "+str(user_name)+ " ha iniciado sesión con éxito",
             "id":str(userHandler.get_id_by_username(user_name)),
-            "role":str(userHandler.get_user_role_by_username(user_name))
+            "role":str(userHandler.get_user_role_by_username(user_name)),
+            "name":str(userHandler.get_name_of_user_by_user_name(user_name))
         }
         return response
     else:
@@ -115,7 +119,29 @@ def r_egister():
         }
         return response
 
+@app.route('/request-appointment',methods=['POST'])
+def r_equest():
+    
+    response = {}
+    id = request.json['id_patient']
+    time = request.json['time']
+    date = request.json['date']
+    reason = request.json['reason']
+    print("Intentanto crear una cita para el paciente con el id:" + str(id))
+    if(appointmentHandler.new_appointment(id,date,time,reason)):
+        response = {
+            "state": "perfect",
+            "message": "La cita ha sido creada con éxito"
+        }
+        return response
+    else:
+        response = {
+            "state": "error",
+            "message": "Tienes una cita en proceso!"
+        }
+        return response
 
+"""
 @app.route('/adminView',methods=['GET','POST','DELETE'])
 def get_user_by_id():
     response = {}
@@ -134,7 +160,7 @@ def get_user_by_id():
         "state": "error",
     }
     return  response
-
+"""
 
 @app.route('/get-patients',methods=['GET'])
 def get_patients():
@@ -157,6 +183,10 @@ def get_medicines():
 def get_id_users():
     return  userHandler.id_of_all_users_except_admin()
 
+@app.route('/get-id_medicines',methods=['GET'])
+def get_id_medicines():
+    return  medicineHandler.id_of_all_medicines()
+
 @app.route('/get-id_appointments',methods=['GET'])
 def get_id_waiting():
     return  appointmentHandler.id_of_all_waiting_appointments()    
@@ -168,6 +198,18 @@ def get_doctor_lisst():
 @app.route('/get-accepted-appointments',methods=['GET'])
 def get_accepted_a():
     return  appointmentHandler.get_accepted_appointments("accepted")
+
+@app.route('/get-appointments-of-a-doctor',methods=['POST'])
+def get_accepted_doctor():
+    id = request.json['id']
+    return  appointmentHandler.get_accepted_appointments_by_doctor("accepted",int(id))
+
+@app.route('/get-finished-appointments-of-a-doctor',methods=['POST'])
+def get_finished_doctor():
+    id = request.json['id']
+    return  appointmentHandler.get_accepted_appointments_by_doctor("completed",int(id))
+
+
 
 
 @app.route('/get-waiting-appointments',methods=['GET'])
@@ -203,6 +245,12 @@ def get_user_dats_by_id():
     print("Intentanto obtener datos para el usuario con el id: " + str(id))
     return userHandler.get_user_data_by_id(id)
 
+@app.route('/get-data-medicines-by-id',methods=['POST'])
+def get_medicine_dats_by_id():
+    id = request.json['id']
+    print("Intentanto obtener datos para el medicamento con el id: " + str(id))
+    return medicineHandler.get_medicine_data_by_id(id)
+
 @app.route('/get-data-appointments-by-id',methods=['POST'])
 def get_appointment_dats_by_id():
     id = request.json['id']
@@ -214,10 +262,21 @@ def get_nurse_dats_by_id():
     id = request.json['id']
     return userHandler.get_user_data_by_id(id)
 
+@app.route('/get-id-specific-patient',methods=['POST'])
+def get_patient_dats_by_id():
+    id = request.json['id']
+    return userHandler.get_user_data_by_id(id)
+
 @app.route('/get-data-nurse-by-id',methods=['POST'])
 def get_data_nurse_by_id():
     id = request.json['id']
     print("Intentanto obtener datos para la enfermera con el id: " + str(id))
+    return userHandler.get_user_data_by_id(id)
+
+@app.route('/get-data-patient-by-id',methods=['POST'])
+def get_data_patient_by_id():
+    id = request.json['id']
+    print("Intentanto obtener datos para el paciente con el id: " + str(id))
     return userHandler.get_user_data_by_id(id)
     
 
@@ -243,6 +302,25 @@ def accept_appointment_():
 
 
 
+@app.route('/accept-appointments-doctor',methods=['POST'])
+def accept_appointment_D():
+    response = {}
+    id = request.json['id']
+    username_doctor = request.json['doctor']
+    print("Intentanto aceptar la cita con el id: " + str(id))
+    if(appointmentHandler.accept_appointment(int(id),username_doctor)):
+        response = {
+            "state": "perfect",
+            "message": "La cita se ha aceptado con éxito!"
+        }
+        return response
+    else:
+        response = {
+            "state": "error",
+            "message": "La cita con el id especificado no exite, o puede que ya haya sido aceptado!, intente de nuevo"
+        }
+        return response
+
 
 @app.route('/delete-user',methods=['POST'])
 def delete_userr():
@@ -263,6 +341,25 @@ def delete_userr():
         }
         return response
 
+@app.route('/delete-medicine',methods=['POST'])
+def delete_medicineee():
+    
+    response = {}
+    id = request.json['id']
+    print("Intentanto eliminar el medicamento con el id: " + str(id))
+    if(medicineHandler.delete_medicine(int(id))):
+        response = {
+            "state": "perfect",
+            "message": "El medicamento ha sido eliminado con éxito"
+        }
+        return response
+    else:
+        response = {
+            "state": "error",
+            "message": "El medicamento no existe, intente de nuevo"
+        }
+        return response
+
 @app.route('/decline-appointment',methods=['POST'])
 def decline_appointment_():
     
@@ -270,6 +367,25 @@ def decline_appointment_():
     id = request.json['id']
     print("Intentanto rechazar la cita con el id: " + str(id))
     if(appointmentHandler.decline_appointment(id)):
+        response = {
+            "state": "perfect",
+            "message": "El usuario ha sido eliminado con éxito"
+        }
+        return response
+    else:
+        response = {
+            "state": "error",
+            "message": "El usuario no existe, intente de nuevo"
+        }
+        return response
+
+@app.route('/finish-appointment',methods=['POST'])
+def finish_appointment_():
+    
+    response = {}
+    id = request.json['id']
+    print("Intentanto finalizar la cita con el id: " + str(id))
+    if(appointmentHandler.finish_appointment(int(id))):
         response = {
             "state": "perfect",
             "message": "El usuario ha sido eliminado con éxito"
@@ -305,6 +421,26 @@ def update_user_admin_():
         }
         return response
 
+@app.route('/update-medicine-admin',methods=['POST'])
+def update_medicine_admin_():
+    response = {}
+    id = request.json['id']
+    price = request.json['price']
+    description = request.json['description']
+    print("Intentanto actualizar los datos del medicamento con el id: " + str(id))
+    if(medicineHandler.update_medicine(int(id),float(price),description)):
+        response = {
+            "state": "perfect",
+            "message": "Los datos del medicamento han sido actualizados con éxito!"
+        }
+        return response
+    else:
+        response = {
+            "state": "error",
+            "message": "El medicamento no existe, intente de nuevo"
+        }
+        return response
+
 
 @app.route('/update-nurse',methods=['POST'])
 def update_nurse_():
@@ -330,16 +466,39 @@ def update_nurse_():
         return response
 
 
-@app.route('/bulk-load-patient',methods=['POST'])
+@app.route('/update-patient',methods=['POST'])
+def update_patient_():
+    response = {}
+    id = request.json['id']
+    name = request.json['name']
+    last_name = request.json['last_name']
+    user_name = request.json['user_name']
+    password = request.json['password']
+    date_of_birth = request.json['date_of_birth']
+    print("Intentanto actualizar los datos del paciente con el id: " + str(id))
+    if(userHandler.update_user(id,name,last_name,user_name,password,date_of_birth)):
+        response = {
+            "state": "perfect",
+            "message": "Los datos de la enfermera han sido actualizados con éxito!"
+        }
+        return response
+    else:
+        response = {
+            "state": "error",
+            "message": "La enfermera no existe, intente de nuevo"
+        }
+        return response
+
+@app.route('/bulk-load-patients',methods=['POST'])
 def bulk_patients():
     
     response = {}
     name = request.json['name']
     last_name = request.json['last_name']
-    birth = request.json['user_name']
-    gender = request.json['password']
-    user_name  = request.json['gender']
-    password  = request.json['date_of_birth']
+    birth = request.json['date']
+    gender = request.json['gender']
+    user_name  = request.json['user_name']
+    password  = request.json['password']
     phone = request.json['phone']
     print("Intentanto crear para:" + str(user_name))
     if(userHandler.new_patient(name,last_name,user_name,password,gender,birth,phone)):
@@ -355,6 +514,80 @@ def bulk_patients():
         }
         return response
 
+@app.route('/bulk-load-doctors',methods=['POST'])
+def bulk_doctors():
+    
+    response = {}
+    name = request.json['name']
+    last_name = request.json['last_name']
+    birth = request.json['date']
+    gender = request.json['gender']
+    user_name  = request.json['user_name']
+    password  = request.json['password']
+    speciality = request.json['speciality']
+    phone = request.json['phone']
+    
+    print("Intentanto crear para:" + str(user_name))
+    if(userHandler.new_doctor(name,last_name,user_name,password,gender,birth,speciality,phone)):
+        response = {
+            "state": "perfect",
+            "message": "El usuario ha sido creado con éxito"
+        }
+        return response
+    else:
+        response = {
+            "state": "error",
+            "message": "El nombre de usuario ya esta en uso"
+        }
+        return response
+
+
+@app.route('/bulk-load-nurses',methods=['POST'])
+def bulk_nurses():
+    
+    response = {}
+    name = request.json['name']
+    last_name = request.json['last_name']
+    birth = request.json['date']
+    gender = request.json['gender']
+    user_name  = request.json['user_name']
+    password  = request.json['password']
+    phone = request.json['phone']
+    print("Intentanto crear para:" + str(user_name))
+    if(userHandler.new_nurse(name,last_name,user_name,password,gender,birth,phone)):
+        response = {
+            "state": "perfect",
+            "message": "El usuario ha sido creado con éxito"
+        }
+        return response
+    else:
+        response = {
+            "state": "error",
+            "message": "El nombre de usuario ya esta en uso"
+        }
+        return response
+
+@app.route('/bulk-load-medicines',methods=['POST'])
+def bulk_medicines():
+    
+    response = {}
+    name = request.json['name']
+    price = request.json['price']
+    description = request.json['description']
+    ammount = request.json['ammount']
+    print("Intentanto crear para:" + str(name))
+    if(medicineHandler.new_medicine(name,float(price),description,int(ammount))):
+        response = {
+            "state": "perfect",
+            "message": "El medicamento ha sido ingresado con éxito"
+        }
+        return response
+    else:
+        response = {
+            "state": "error",
+            "message": "La medicina ya existe, intente de nuevo!"
+        }
+        return response
 
 if __name__ == "__main__":
     app.run(threaded=True, port=5000,debug=True)
