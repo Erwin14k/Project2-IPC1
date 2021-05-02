@@ -6,7 +6,7 @@ class Medicine_DAO:
         self.idm_counter = 1000
 
 
-
+#Función para crear nueva medicina
     def new_medicine(self,name,price,description,amount):
         for medicine in self.medicines:
             if medicine.name == name:

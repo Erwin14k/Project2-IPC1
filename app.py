@@ -3,6 +3,7 @@ from flask_cors import CORS
 from User_DAO import User_DAO
 from Medicine_DAO import Medicine_DAO
 from Appointment_DAO import Appointment_DAO
+from Prescription_DAO import Prescription_DAO
 from flask.globals import request
 from instances import userHandlerInstance
 
@@ -11,35 +12,36 @@ CORS(app)
 userHandler = userHandlerInstance
 medicineHandler = Medicine_DAO()
 appointmentHandler = Appointment_DAO()
+prescriptionHandler= Prescription_DAO()
 
 
 
-userHandler.new_admin("Erwin","Vásquez","Master","1234","m","15/04/2021","12345678")
-userHandler.new_patient("paciente","1","user1","1234","m",'15/04/2021',"12345678")
-userHandler.new_patient("paciente","2","user2","1234","m","15/04/2021","12345678")
-userHandler.new_patient("paciente","3","user3","1234","f","15/04/2021","12345678")
-userHandler.new_patient("paciente","4","user4","1234","f","15/04/2021","12345678")
-userHandler.new_patient("paciente","5","user5","1234","m","15/04/2021","12345678")
+userHandler.new_admin("Ariel","Bautista","admin","1234","m","15/04/2021","12345678")
+userHandler.new_patient("Jaime","Cardozo","user1","1234","m",'15/04/2021',"12345678")
+userHandler.new_patient("Juan","Fernandez","user2","1234","m","15/04/2021","12345678")
+userHandler.new_patient("Adriana","Santizo","user3","1234","f","15/04/2021","12345678")
+userHandler.new_patient("Ericka","Márquez","user4","1234","f","15/04/2021","12345678")
+userHandler.new_patient("Pedro","DeMarcos","user5","1234","m","15/04/2021","12345678")
 
-userHandler.new_doctor("doctor","1","user100","1234","m","15/04/2021","Cardiologo","12345678")
-userHandler.new_doctor("doctor","2","user101","1234","m","15/04/2021","Pediatra","12345678")
-userHandler.new_doctor("doctor","3","user102","1234","f","15/04/2021","Oncólogo","12345678")
-userHandler.new_doctor("doctor","4","user103","1234","f","15/04/2021","Urólogo","12345678")
-userHandler.new_doctor("doctor","5","user104","1234","m","15/04/2021","Cirugía General","12345678")
-
-
-userHandler.new_nurse("enfermera", "1", "nurse1", "1234", "f", "15/04/2021", "12345678")
-userHandler.new_nurse("enfermera", "2", "nurse2", "1234", "f", "15/04/2021", "12345678")
-userHandler.new_nurse("enfermera", "3", "nurse3", "1234", "f", "15/04/2021", "12345678")
-userHandler.new_nurse("enfermera", "4", "nurse4", "1234", "f", "15/04/2021", "12345678")
-userHandler.new_nurse("enfermera", "5", "nurse5", "1234", "f", "15/04/2021", "12345678")
+userHandler.new_doctor("Oscar","Mingueza","user100","1234","m","15/04/2021","Cardiologo","12345678")
+userHandler.new_doctor("Javier","Ordoñez","user101","1234","m","15/04/2021","Pediatra","12345678")
+userHandler.new_doctor("Jorge","Lopez","user102","1234","f","15/04/2021","Oncólogo","12345678")
+userHandler.new_doctor("Matias","Hernandez","user103","1234","f","15/04/2021","Urólogo","12345678")
+userHandler.new_doctor("Julian","Castillo","user104","1234","m","15/04/2021","Cirugía General","12345678")
 
 
-medicineHandler.new_medicine("Acetaminofen", 50.00, "medicina 1", 100)
-medicineHandler.new_medicine("Ibuprofeno", 50.00, "medicina 2", 100)
-medicineHandler.new_medicine("Ibersatán", 50.00, "medicina 3", 100)
-medicineHandler.new_medicine("Paracetamol", 50.00, "medicina 4", 100)
-medicineHandler.new_medicine("Omeprazol ", 50.00, "medicina 5", 100)
+userHandler.new_nurse("Jessica", "Rodriguez", "nurse1", "1234", "f", "15/04/2021", "12345678")
+userHandler.new_nurse("Angélica", "Nuñez", "nurse2", "1234", "f", "15/04/2021", "12345678")
+userHandler.new_nurse("Bárbara", "García", "nurse3", "1234", "f", "15/04/2021", "12345678")
+userHandler.new_nurse("Celia", "Martinez", "nurse4", "1234", "f", "15/04/2021", "12345678")
+userHandler.new_nurse("Allison", "DiLaurentis", "nurse5", "1234", "f", "15/04/2021", "12345678")
+
+
+medicineHandler.new_medicine("locamedicina1", 50.00, "medicina 1", 100)
+medicineHandler.new_medicine("locamedicina2", 50.00, "medicina 2", 100)
+medicineHandler.new_medicine("locamedicina3", 50.00, "medicina 3", 100)
+medicineHandler.new_medicine("locamedicina4", 50.00, "medicina 4", 100)
+medicineHandler.new_medicine("locamedicina5 ", 50.00, "medicina 5", 100)
 
 appointmentHandler.new_appointment(1,"22/04/2021","9:00","Dolor de estómago")
 appointmentHandler.new_appointment(2,"22/04/2021","9:00","Dolor de cabeza")
@@ -53,8 +55,8 @@ appointmentHandler.new_appointment(5,"22/04/2021","9:00","Dolor de cuello")
 #print(userHandler.get_id_by_username("user100"))
 #print(userHandler.get_user_data_by_id(1))
 
-print(userHandler.update_user(11,"Lidia","Vásquez","lidia123","12345","21/07/2000" ))
-print(userHandler.users[11].user_name)
+#print(userHandler.update_user(11,"Lidia","Vásquez","lidia123","12345","21/07/2000" ))
+#print(userHandler.users[11].user_name)
 
 
 
@@ -92,6 +94,51 @@ def login():
         }
         return response
 
+@app.route('/total-bill',methods=['POST'])
+def calc_total():
+    totalfac=0
+    response = {}
+    consulta = request.json['consulta']
+    operacion = request.json['operacion']
+    internado = request.json['internado']
+    print("Intentanto calcular el total de factura..........")
+    
+    if(operacion != "" and internado != ""):
+        totalfac=float(consulta)+float(operacion)+float(internado)
+        print(str(totalfac))
+        response = {
+            "state": "perfect",
+            "totalbill":str(totalfac)
+        }
+        return response
+    elif(operacion != "" and internado == ""):
+        totalfac=float(consulta)+float(operacion)
+        print(str(totalfac))
+        response = {
+            "state": "perfect",
+            "totalbill":str(totalfac)
+        }
+        return response
+    elif(operacion == "" and internado != ""):
+        totalfac=float(consulta)+float(internado)
+        print(str(totalfac))
+        response = {
+            "state": "perfect",
+            "totalbill":str(totalfac)
+        }
+        return response
+    else:
+        totalfac=float(consulta)
+        print(str(totalfac))
+        response = {
+            "state": "perfect",
+            "totalbill":str(totalfac)
+        }
+        return response
+
+
+
+
 
 
 @app.route('/register',methods=['POST'])
@@ -118,6 +165,19 @@ def r_egister():
             "message": "El nombre de usuario ya esta en uso"
         }
         return response
+
+
+
+@app.route('/new-prescription',methods=['POST'])
+def new_presc():
+    patient = request.json['name_patient']
+    date = request.json['date']
+    suffering = request.json['suffering']
+    description = request.json['description']
+    id = request.json['doctor']
+    print("Intentanto crear la receta para el paciente: " + str(patient))
+    if(prescriptionHandler.new_prescription(patient,date,suffering,description)):
+        return userHandler.get_user_data_by_id(int(id))
 
 @app.route('/request-appointment',methods=['POST'])
 def r_equest():
@@ -262,6 +322,12 @@ def get_nurse_dats_by_id():
     id = request.json['id']
     return userHandler.get_user_data_by_id(id)
 
+
+@app.route('/get-id-specific-doctor',methods=['POST'])
+def get_doctor_dats_by_id():
+    id = request.json['id']
+    return userHandler.get_user_data_by_id(id)
+
 @app.route('/get-id-specific-patient',methods=['POST'])
 def get_patient_dats_by_id():
     id = request.json['id']
@@ -271,6 +337,20 @@ def get_patient_dats_by_id():
 def get_data_nurse_by_id():
     id = request.json['id']
     print("Intentanto obtener datos para la enfermera con el id: " + str(id))
+    return userHandler.get_user_data_by_id(id)
+
+@app.route('/get-data-doctor-by-id',methods=['POST'])
+def get_data_doctor_by_id():
+    id = request.json['id']
+    print("Intentanto obtener datos para la enfermera con el id: " + str(id))
+    return userHandler.get_user_data_by_id(id)
+
+
+
+@app.route('/generate-bill',methods=['POST'])
+def get_data_doctor_for_bill():
+    id = request.json['id']
+    print("Intentanto obtener datos para el doctor con el id: " + str(id))
     return userHandler.get_user_data_by_id(id)
 
 @app.route('/get-data-patient-by-id',methods=['POST'])
@@ -284,9 +364,9 @@ def get_data_patient_by_id():
 def accept_appointment_():
     response = {}
     id = request.json['id']
-    username_doctor = request.json['doctor']
+    id_doctor = request.json['doctor']
     print("Intentanto aceptar la cita con el id: " + str(id))
-    if(appointmentHandler.accept_appointment(id,username_doctor)):
+    if(appointmentHandler.accept_appointment(id,id_doctor)):
         response = {
             "state": "perfect",
             "message": "La cita se ha aceptado con éxito!"
@@ -306,9 +386,9 @@ def accept_appointment_():
 def accept_appointment_D():
     response = {}
     id = request.json['id']
-    username_doctor = request.json['doctor']
+    id_doctor = request.json['doctor']
     print("Intentanto aceptar la cita con el id: " + str(id))
-    if(appointmentHandler.accept_appointment(int(id),username_doctor)):
+    if(appointmentHandler.accept_appointment(int(id),int(id_doctor))):
         response = {
             "state": "perfect",
             "message": "La cita se ha aceptado con éxito!"
@@ -462,6 +542,29 @@ def update_nurse_():
         response = {
             "state": "error",
             "message": "La enfermera no existe, intente de nuevo"
+        }
+        return response
+
+@app.route('/update-doctor',methods=['POST'])
+def update_doctor_():
+    response = {}
+    id = request.json['id']
+    name = request.json['name']
+    last_name = request.json['last_name']
+    user_name = request.json['user_name']
+    password = request.json['password']
+    date_of_birth = request.json['date_of_birth']
+    print("Intentanto actualizar los datos de la enfermera con el id: " + str(id))
+    if(userHandler.update_user(id,name,last_name,user_name,password,date_of_birth)):
+        response = {
+            "state": "perfect",
+            "message": "Los datos del doctor han sido actualizados con éxito!"
+        }
+        return response
+    else:
+        response = {
+            "state": "error",
+            "message": "El doctor no existe, intente de nuevo"
         }
         return response
 

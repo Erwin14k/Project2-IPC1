@@ -18,6 +18,14 @@ class User_DAO:
                 return user.dump()
         return {}
 
+#Función que le agrega citas atendidas a un médico
+    def add_prescription(self,id):
+        for user in self.users:
+            if user.id == int(id) and user.user_role=="doctor":
+                user.prescriptions+=1
+                return True
+        return False
+
 #Función que nos devuelve el rol que tiene el usuario
     def get_user_role_by_username(self,user_name):
         for user in self.users:
@@ -31,7 +39,7 @@ class User_DAO:
             if user.id == int(id):
                 return user
         return False
-
+#Función que nos devuelve el numero de coincidencias encontradas de un nombre de usuario
     def coincidence_of_user_name(self,username):
         for user in self.users:
             if user.user_name==username:
@@ -45,7 +53,7 @@ class User_DAO:
             if user.id == int(id):
                 return user.name+" "+user.last_name
         return False
-
+#Función que nos devuelve el nombre y apellido del usuario en base a su username
     def get_name_of_user_by_user_name(self,user_name):    
         for user in self.users:
             if user.user_name == user_name:
@@ -146,7 +154,7 @@ class User_DAO:
             if user.user_name == user_name:
                 print('El nombre de usuario ya existe, intente de nuevo')
                 return False
-        new = User(self.id_counter,name,last_name,user_name,password,gender,date_of_birth,phone,"Administrador","admin")
+        new = User(self.id_counter,name,last_name,user_name,password,gender,date_of_birth,phone,"Administrador","admin",0)
         self.users.append(new)
         self.id_counter += 1
         print("Se creo un nuevo admin")
@@ -155,10 +163,10 @@ class User_DAO:
 #Función para crear nuevos pacientes
     def new_patient(self,name,last_name,user_name,password,gender,date_of_birth,phone):
         for user in self.users:
-            if user.user_name == user_name:
+            if user.user_name == user_name or name=="nombre" or name=="Nombre":
                 print('El nombre de usuario ya existe, intente de nuevo')
                 return False
-        new = User(self.id_counter,name,last_name,user_name,password,gender,date_of_birth,phone,"Paciente","patient")
+        new = User(self.id_counter,name,last_name,user_name,password,gender,date_of_birth,phone,"Paciente","patient",0)
         self.users.append(new)
         self.id_counter += 1
         print("Se creo un nuevo paciente")
@@ -183,10 +191,10 @@ class User_DAO:
 #Función para crear nuevos doctores
     def new_doctor(self,name,last_name,user_name,password,gender,date_of_birth,speciality,phone):
         for user in self.users:
-            if user.user_name == user_name:
+            if user.user_name == user_name or name=="nombre" or name=="Nombre":
                 print('El nombre de usuario ya existe, intente de nuevo')
                 return False
-        new = User(self.id_counter,name,last_name,user_name,password,gender,date_of_birth,phone,speciality,"doctor")
+        new = User(self.id_counter,name,last_name,user_name,password,gender,date_of_birth,phone,speciality,"doctor",0)
         self.users.append(new)
         self.id_counter += 1
         print("Se creo un nuevo doctor")
@@ -199,10 +207,10 @@ class User_DAO:
 #Función para crear nuevas enfermeras
     def new_nurse(self,name,last_name,user_name,password,gender,date_of_birth,phone):
         for user in self.users:
-            if user.user_name == user_name:
+            if user.user_name == user_name or name=="nombre" or name=="Nombre":
                 print('El nombre de usuario ya existe, intente de nuevo')
                 return False
-        new = User(self.id_counter,name,last_name,user_name,password,gender,date_of_birth,phone,"Enfermera","nurse")
+        new = User(self.id_counter,name,last_name,user_name,password,gender,date_of_birth,phone,"Enfermera","nurse",0)
         self.users.append(new)
         self.id_counter += 1
         print("Se creo una nueva enfermera")

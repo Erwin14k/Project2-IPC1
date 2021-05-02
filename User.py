@@ -1,5 +1,5 @@
 class User:
-    def __init__(self,id,name,last_name,user_name,password,gender,date_of_birth,phone,speciality,user_role):
+    def __init__(self,id,name,last_name,user_name,password,gender,date_of_birth,phone,speciality,user_role,prescriptions):
         self.id = id 
         self.name = name
         self.last_name = last_name
@@ -10,6 +10,7 @@ class User:
         self.phone=phone
         self.speciality=speciality
         self.user_role = user_role
+        self.prescriptions=prescriptions
 
 
     def dump(self):
@@ -24,4 +25,5 @@ class User:
             'phone':self.phone,
             'speciality':self.speciality,
             'user_role':self.user_role,
+            'prescriptions':self.prescriptions,
         }
