@@ -242,6 +242,11 @@ def get_medicines():
 def get_medicines2_():
     return  medicineHandler.get_medicines2()
 
+@app.route('/generate-purchase',methods=['POST'])
+def get_purchase_():
+    id = request.json['id']
+    return  medicineHandler.get_medicine_data_by_id(id)
+
 
 @app.route('/get-id_users',methods=['GET'])
 def get_id_users():
