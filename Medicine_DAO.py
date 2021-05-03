@@ -20,7 +20,11 @@ class Medicine_DAO:
 
 #Función que devuelve todos los medicamentos
     def get_medicines(self):
-        return json.dumps([Medicine.dump() for Medicine in self.medicines ]) 
+        return json.dumps([Medicine.dump() for Medicine in self.medicines  ]) 
+
+#Función que devuelve todos los medicamentos que tengan al menos una existencia
+    def get_medicines2(self):
+        return json.dumps([Medicine.dump() for Medicine in self.medicines if Medicine.status!=0 ]) 
 #Función parecida a la anterior, en este caso nos servirá para traer los id de los medicamentos
     def id_of_all_medicines(self):
         return json.dumps([Medicine.dump() for Medicine in self.medicines ])
@@ -53,7 +57,7 @@ class Medicine_DAO:
     def purchase_update(self,id,amount):
         for medicine in self.medicines:
             if medicine.id==int(id):
-                if medicine.amount >=amount:
-                    medicine.amount=medicine.amount-amount
+                if medicine.amount >=int(amount):
+                    medicine.amount=medicine.amount-int(amount)
                     return True
                 return False

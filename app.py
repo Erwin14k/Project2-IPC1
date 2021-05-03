@@ -238,6 +238,10 @@ def get_nurses():
 def get_medicines():
     return  medicineHandler.get_medicines()
 
+@app.route('/get-medicines2',methods=['GET'])
+def get_medicines2_():
+    return  medicineHandler.get_medicines2()
+
 
 @app.route('/get-id_users',methods=['GET'])
 def get_id_users():
