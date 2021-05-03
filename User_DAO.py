@@ -39,13 +39,7 @@ class User_DAO:
             if user.id == int(id):
                 return user
         return False
-#Función que nos devuelve el numero de coincidencias encontradas de un nombre de usuario
-    def coincidence_of_user_name(self,username):
-        for user in self.users:
-            if user.user_name==username:
-                self.coincidences += 1
-                if self.coincidences==0:
-                    return True
+
 
 #Función que nos devuelve el nombre y apellido del usuario en base a su id
     def get_name_of_user_by_id(self,id):    
@@ -89,63 +83,37 @@ class User_DAO:
                 return True
         print(f'El usuario con id: "{ id }" no ha sido encontrado.')
         return False
-    
-    #Función para actualizar datos de cualquier usuario (Paciente, Doctor, enfermera)
+
+    #Función que nos devuelve el numero de coincidencias encontradas de un nombre de usuario
+    def coincidence_of_user_name(self,username):
+        for user in self.users:
+            if (user.user_name == username):
+                return False
+        return True
+
+
     def update_user(self,id , name ,last_name ,user_name ,password ,date_of_birth):
         for user in self.users:
-            if user.user_name != user_name :
-                self.coincidences=0
-                if user.id==int(id):
-                    #if self.coincidences==0 or self.coincidences==1:
-                    print("hola-------------------------------")
+            if user.id==int(id):
+                if user.user_name==user_name:
+                    print("hoooooola1111111111111111111111")
                     user.name = name
                     user.last_name = last_name
-                    user.user_name = user_name
                     user.password = password
                     user.date_of_birth = date_of_birth
                     print("Se han actualizado con éxito los datos para el paciente con el id: "+str(id))
-                    self.coincidences=0
                     return True
-            elif user.user_name == user_name :
-                self.coincidences+=1
-                if user.id==int(id):
-                    if self.coincidences==0:
-                        print("hola-------------------------------")
+                elif user.user_name!=user_name:
+                    print("hoooooola222222222222222222222222")
+                    if(self.coincidence_of_user_name(user_name)):
+                        print("hoooooola3333333333333333333333333")
                         user.name = name
                         user.last_name = last_name
-                        user.user_name = user_name
                         user.password = password
+                        user.user_name=user_name
                         user.date_of_birth = date_of_birth
                         print("Se han actualizado con éxito los datos para el paciente con el id: "+str(id))
-                        self.coincidences=0
                         return True
-        return False
-
-
-    """def update_user2(self,id , name ,last_name ,username ,password ,date_of_birth):
-        self.coincidences=0
-        for user in self.users:
-            if user.id==int(id) and user.user_name==username:
-                print("hola-------------------------------")
-                user.name = name
-                user.last_name = last_name
-                user.password = password
-                user.date_of_birth = date_of_birth
-                print("Se han actualizado con éxito los datos para el paciente con el id: "+str(id))
-                return True
-            elif user.id==int(id) and user.user_name != username:
-                if (User_DAO.coincidence_of_user_name(username)):
-                    print("hola-------------------------------")
-                    user.name = name
-                    user.last_name = last_name
-                    user.user_name = username
-                    user.password = password
-                    user.date_of_birth = date_of_birth
-                    print("Se han actualizado con éxito los datos para el paciente con el id: "+str(id))
-                    self.coincidences=0
-                    return True
-            self.coincidences=0
-            return False"""
 
 
 #Función para crear nuevos admin(Esta función solo se utilizará una vez ya que solo hay un admin)
