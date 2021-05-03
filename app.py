@@ -550,7 +550,7 @@ def less_amount():
     response = {}
     id_medicine = request.json['id']
     amount = request.json['amount']
-    if(medicineHandler.purchase_update(id,amount)):
+    if(medicineHandler.purchase_update(id_medicine,amount)):
         response = {
             "state": "perfect",
             "message": "La cantidad de la medicina ha sido actualizada con éxito!!"
