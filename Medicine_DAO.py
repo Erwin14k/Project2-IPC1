@@ -49,3 +49,11 @@ class Medicine_DAO:
                 return True
         print(f'El medicamento con id: "{ id }" no ha sido encontrado.')
         return False
+    
+    def purchase_update(self,id,amount):
+        for medicine in self.medicines:
+            if medicine.id==int(id):
+                if medicine.amount >=amount:
+                    medicine.amount=medicine.amount-amount
+                    return True
+                return False

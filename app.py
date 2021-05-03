@@ -545,6 +545,24 @@ def update_nurse_():
         }
         return response
 
+@app.route('/less-amount',methods=['POST'])
+def less_amount():
+    response = {}
+    id_medicine = request.json['id']
+    amount = request.json['amount']
+    if(medicineHandler.purchase_update(id,amount)):
+        response = {
+            "state": "perfect",
+            "message": "La cantidad de la medicina ha sido actualizada con éxito!!"
+        }
+        return response
+    else:
+        response = {
+            "state": "error",
+            "message": "La medicina no tiene suficiente cantidad para ser despachada"
+        }
+        return response
+
 @app.route('/update-doctor',methods=['POST'])
 def update_doctor_():
     response = {}
